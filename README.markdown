@@ -3,10 +3,6 @@ Sprockets Standalone Example
 
 Example of using Sprockets standalone to compress and package assets. Following Rails 3.1 conventions as far as possible.
 
-Using:
-*  Sprockets
-*  YUI Compressor
-
 Prerequisites
 -------------
 
@@ -40,4 +36,5 @@ Contact
 -------
 
 Author: Frederik Dietz
+
 Email: fdietz@gmail.com
