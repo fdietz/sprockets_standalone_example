@@ -21,12 +21,16 @@ Clone the git repository and execute:
 
 To package the example content execute:
 
-    $ bundle exec rake assets:compile
+    $ bundle exec rake assets:precompile
+
+To start a Rack-based server:
+
+    $ bundle exec rake assets:rackup
 
 Background
 ----------
 
-All example content can be found in src/ directory. All generated output will reside in build/ directory. 
+All example content can be found in src/ directory. All generated output will reside in build/ directory.
 
 Following Rails 3.1 conventions all assets have an MD5 hashsum filename generated.
 
