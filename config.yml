@@ -1,0 +1,5 @@
+---
+src_dir: src
+build_dir: build
+assets: [javascripts, stylesheets, images, fonts]
+bundles: [common.css, common.js, nested/common.js]
