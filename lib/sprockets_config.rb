@@ -2,9 +2,7 @@ require 'pathname'
 require 'logger'
 require 'fileutils'
 
-require File.join(File.dirname(__FILE__), 'static_compiler')
-
-ROOT = Pathname(File.join(File.dirname(__FILE__), '/..'))
+require File.expand_path('../static_compiler', __FILE__)
 
 class SprocketsConfig
 
@@ -14,21 +12,31 @@ class SprocketsConfig
   attr_reader :source_dir, :build_dir, :bundles, :assets
 
   def initialize(options = {})
-    @source_dir = ROOT.join(options['source_dir'] || 'src')
-    @build_dir = ROOT.join(options['build_dir'] || 'build')
-    @bundles = options['bundles'] || BUNDLES
-    @assets = options['assets'] || ASSETS
+    raise "No src_dir specified"           unless options['src_dir']
+    raise "No build_dir specified"         unless options['build_dir']
+    raise "No sprockets bundles specified" unless options['bundles']
+    raise "No sprockets assets specified"  unless options['assets']
+
+    @source_dir = root.join(options['src_dir'])
+    @build_dir  = root.join(options['build_dir'])
+    @bundles    = options['bundles']
+    @assets     = options['assets']
 
     logger.info "Initialized Sprockets Config..."
-    logger.info "Root Directory: #{ROOT}"
-    logger.info "Source Directory: #{source_dir}"
-    logger.info "Build Directory: #{build_dir}"
-    logger.info "Bundles: #{bundles.inspect}"
-    logger.info "Assets: #{assets.inspect}"
+    logger.info "Source Directory: #{@source_dir.realpath}"
+    logger.info "Assets Bundles: #{@bundles.inspect}"
+    logger.info "Assets Path: #{@assets.inspect}"
   end
 
   def logger
-    @logger ||= Logger.new(STDOUT)
+    @logger ||= begin
+      log = Logger.new(STDOUT)
+      log.datetime_format = "%Y-%m-%d %H:%M:%S"
+      log.formatter = proc { |severity, datetime, progname, msg|
+        "[#{datetime.strftime(log.datetime_format)} Sprockets] #{msg}\n"
+      }
+      log
+    end
   end
 
   def precompile
@@ -39,7 +47,7 @@ class SprocketsConfig
   end
 
   def cleanup
-    logger.info "Cleaning up build dir: #{build_dir}"
+    logger.info "Cleaning up build dir: #{build_dir.realpath}"
     FileUtils.rm_rf(build_dir)
   end
 
@@ -48,6 +56,10 @@ class SprocketsConfig
   end
 
   private
+
+  def root
+    Pathname(File.join(File.dirname(__FILE__), '/..'))
+  end
 
   def write_manifest(manifest)
     File.open(manifest_file_path, 'wb') do |f|
@@ -64,7 +76,7 @@ class SprocketsConfig
   end
 
   def create_sprockets_env
-    sprockets = Sprockets::Environment.new(ROOT) do |env|
+    sprockets = Sprockets::Environment.new(root) do |env|
       env.logger = logger
 
       env.js_compressor = YUI::JavaScriptCompressor.new :munge => true, :optimize => true

@@ -6,7 +6,7 @@ Example of using Sprockets standalone to compress and package assets. Following 
 Prerequisites
 -------------
 
-You need Ruby. I've tested with Ruby 1.8.7-p352 and Ruby-1.9.2-p290
+You need Ruby. I've tested with Ruby-1.9.2-p290
 
 Additionally install Bundler with:
 
@@ -23,18 +23,20 @@ To package the example content execute:
 
     $ bundle exec rake assets:precompile
 
-To start a Rack-based server:
+To start the Sinatra example app:
 
     $ bundle exec rake assets:rackup
 
 Background
 ----------
 
-All example content can be found in src/ directory. All generated output will reside in build/ directory.
+All example content can be found in assets/ directory. All generated output will reside in build/ directory.
 
 Following Rails 3.1 conventions all assets have an MD5 hashsum filename generated.
 
 Additionally there's a manifest.yml created which contains a mapping of each assets path to it's versioned path.
+
+The sinatra app loads all assets with an asset helper method which supports passing :debug => true options. This will include all individual files instead of a single compiled file.
 
 Contact
 -------

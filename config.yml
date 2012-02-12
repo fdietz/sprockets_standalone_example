@@ -1,5 +1,5 @@
 ---
-src_dir: src
+src_dir: assets
 build_dir: build
 assets: [javascripts, stylesheets, images, fonts]
-bundles: [common.css, common.js, nested/common.js]
+bundles: [application.css, application.js, nested/application.js, 17_icon.png]

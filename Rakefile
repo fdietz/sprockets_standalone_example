@@ -1,9 +1,8 @@
 require 'rubygems'
 require 'bundler'
-
 Bundler.require
 
-require File.join(File.dirname(__FILE__), '/lib/sprockets_config')
+require File.expand_path('../lib/sprockets_config', __FILE__)
 
 namespace :assets do
 
@@ -19,11 +18,14 @@ namespace :assets do
 
   desc "Start Rack based server"
   task :rackup do
-    cmd = "rackup config.ru"
+    cmd = "bundle exec rackup config.ru"
     system cmd
   end
+
+  private
 
   def config
     @config ||= SprocketsConfig.new(YAML::load(File.open("config.yml")))
   end
+  
 end # namespace
